@@ -13,3 +13,12 @@
 - Nesse cenário futuro, `ne-platform-api` poderá assumir o papel de BFF/Gateway.
 - Microserviços e comunicação distribuída não devem ser introduzidos sem necessidade concreta.
 - Abstrações prematuras devem ser evitadas; a estrutura deve crescer conforme os requisitos reais.
+
+## Identidade organizacional
+
+- `Organization` é a fronteira organizacional dos dados e usuários.
+- `User` representa a identidade interna e permanece separado dos mecanismos de autenticação.
+- `Role` classifica o nível de acesso do usuário; permissões granulares serão modeladas em uma fase posterior.
+- O e-mail é a principal identificação de login e é único dentro de cada Organization.
+- Autenticação futura por senha ou Google deve convergir para o mesmo `User`.
+- Google nunca controla criação, ativação, desativação, Role ou autorização de usuários.

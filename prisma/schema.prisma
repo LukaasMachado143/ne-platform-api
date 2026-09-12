@@ -6,3 +6,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserStatus {
+  PENDING_ACTIVATION
+  ACTIVE
+  INACTIVE
+}
+
+model Organization {
+  id        String             @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String             @unique
+  status    OrganizationStatus
+  createdAt DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime           @updatedAt @db.Timestamptz(3)
+  roles     Role[]
+  users     User[]
+}
+
+model Role {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  key            String
+  name           String
+  description    String?
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  users          User[]
+
+  @@unique([organizationId, key])
+}
+
+model User {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  name           String
+  displayName    String
+  email          String
+  status         UserStatus   @default(PENDING_ACTIVATION)
+  roleId         String       @db.Uuid
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  role           Role         @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([organizationId, email])
+  @@index([roleId])
+}

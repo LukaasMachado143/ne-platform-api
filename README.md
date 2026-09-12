@@ -42,9 +42,11 @@ pnpm start:prod        # executa o build de produção
 pnpm lint              # verifica o código com ESLint
 pnpm test              # executa os testes unitários
 pnpm prisma:generate   # gera o Prisma Client
+pnpm prisma:migrate    # cria e aplica migrations no ambiente de desenvolvimento
+pnpm prisma:seed       # aplica os dados iniciais de forma idempotente
 ```
 
-Após alterar o schema do Prisma, execute `pnpm prisma:generate`. O schema está em `prisma/schema.prisma`.
+Após alterar o schema do Prisma, execute `pnpm prisma:generate`. O schema está em `prisma/schema.prisma`. Configure `DATABASE_URL` antes de executar migrations ou o seed.
 
 ## Health check
 
